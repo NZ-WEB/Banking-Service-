@@ -1,5 +1,7 @@
 # vue-practice-app
 
+# https://vue-banking-c5044.web.app/
+
 ## Project setup
 ```
 npm install
