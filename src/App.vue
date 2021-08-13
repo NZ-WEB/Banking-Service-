@@ -14,7 +14,8 @@ export default {
     const route = useRoute()
 
     return {
-      layout: computed(() => route.meta.layout)
+      layout: computed(() => route.meta.layout)//computed included;
+
     }
   },
   components: {
@@ -25,5 +26,4 @@ export default {
 </script>
 
 <style>
-/*1:01:11*/
 </style>

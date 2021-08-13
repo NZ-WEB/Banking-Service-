@@ -1,19 +1,21 @@
 <template>
-
+  <the-navbar />
+  <the-sidebar />
   <div class="container with-nav">
-    <the-navbar/>
-    <div class="card">
-
-    </div>
+    <app-message  />
+      <router-view></router-view>
   </div>
 </template>
 
 <script>
 import TheNavbar from "../components/TheNavbar";
+import AppMessage from "../components/ui/AppMessage";
+import TheSidebar from "../components/TheSidebar";
+
 
 export default {
 name: "MainLayout",
-  components: {TheNavbar}
+  components: {TheNavbar, AppMessage, TheSidebar}
 }
 </script>
 

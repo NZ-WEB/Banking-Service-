@@ -30,12 +30,23 @@ const routes = [
       layout: 'auth',
       auth: false
     }
-  }
+  },
+  {
+    path: '/request',
+    name: 'Request',
+    component: () => import('../views/Request.vue'),
+    meta: {
+      layout: 'main',
+      auth: true
+    }
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'active'
 })
 
 router.beforeEach((to, from, next) => {

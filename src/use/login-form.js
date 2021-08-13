@@ -1,51 +1,58 @@
-import {useField, useForm} from "vee-validate";
-import * as yup from "yup";
-import {computed, watch} from "vue";
-import globalConsts from '../globalConsts'
+import {useField, useForm} from 'vee-validate'
+import * as yup from 'yup'
+import {computed, watch} from 'vue'
 import {useStore} from 'vuex'
-import {useRouter} from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
+import {error} from "../utils/error";
 
 export function useLoginForm() {
-    const {PASS_MIN_LEN,BREAK_AUTH_TIME} = globalConsts
-
     const store = useStore()
     const router = useRouter()
-
+    const route = useRoute()
     const {handleSubmit, isSubmitting, submitCount} = useForm()
 
     const {value: email, errorMessage: eError, handleBlur: eBlur} = useField(
-        'email',
-        yup
-            .string()
-            .trim()
-            .required('Это поле обязательно для заполнения!')
-            .email('Неободимо ввести корректный E-mail')
+      'email',
+      yup
+        .string()
+        .trim()
+        .required('Пожалуйста введите email')
+        .email('Необходимо ввести корректный email')
     )
 
+    const MIN_LENGTH = 6
+
     const {value: password, errorMessage: pError, handleBlur: pBlur} = useField(
-        'password',
-        yup
-            .string()
-            .trim()
-            .required('Это поле обязательно для заполнения!')
-            .min(PASS_MIN_LEN, `Пароль не может быть меньше ${PASS_MIN_LEN}`)
+      'password',
+      yup
+        .string()
+        .trim()
+        .required('Пожалуйста введите пароль')
+        .min(MIN_LENGTH, `Пароль не может быть меньше ${MIN_LENGTH} символов`)
     )
 
     const isTooManyAttempts = computed(() => submitCount.value >= 3)
 
     watch(isTooManyAttempts, val => {
         if (val) {
-            setTimeout(() => {
-                submitCount.value = 0
-            }, 60 * BREAK_AUTH_TIME)
+            setTimeout(() => submitCount.value = 0, 1500)
         }
     })
 
     const onSubmit = handleSubmit(async values => {
-        console.log('Form', values)
-        await store.dispatch('auth/login', values)
-        router.push('/')
+        try {
+            await store.dispatch('auth/login', values)
+            router.push('/')
+        } catch (e) {
+        }
     })
+
+    if (route.query.message) {
+        store.dispatch('setMessage', {
+            value: error(route.query.message),
+            type: 'warning'
+        })
+    }
 
     return {
         email,
